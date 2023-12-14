@@ -1,0 +1,18 @@
+{
+  "name": "chapter02-threejs",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.0.8"
+  },
+  "packageManager": "pnpm@8.12.0+sha1.7134f9b8d0b70bc7a1954f47af52123cd2b2acce",
+  "dependencies": {
+    "three": "^0.159.0"
+  }
+}
