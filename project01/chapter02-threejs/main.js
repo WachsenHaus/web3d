@@ -14,7 +14,10 @@ const camera = new THREE.PerspectiveCamera(
 );
 
 const floorGeometry = new THREE.PlaneGeometry(20, 20);
-const floorMaterial = new THREE.MeshStandardMaterial({ color: 'gray' });
+const floorMaterial = new THREE.MeshStandardMaterial({
+  color: 'gray',
+  // side: THREE.DoubleSide,
+});
 const floorMesh = new THREE.Mesh(floorGeometry, floorMaterial);
 floorMesh.receiveShadow = true;
 floorMesh.castShadow = true;
@@ -35,131 +38,64 @@ camera.position.x = 5;
 // camera.position.y = 5;
 
 scene.add(floorMesh);
-scene.add(directionalLight);
+// scene.add(directionalLight);
 
-const frontSideGeometry = new THREE.BoxGeometry(1, 1, 1);
-const frontSideMaterial = new THREE.MeshStandardMaterial({
-  color: 'green',
-  side: THREE.FrontSide,
-});
+const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
+const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+boxMesh.castShadow = true;
+boxMesh.receiveShadow = true;
+boxMesh.position.y = 0.5;
+scene.add(boxMesh);
 
-const frontSideMesh = new THREE.Mesh(frontSideGeometry, frontSideMaterial);
-frontSideMesh.position.z = 4;
-frontSideMesh.position.y = 0.5;
-frontSideMesh.castShadow = true;
-frontSideMesh.receiveShadow = true;
-scene.add(frontSideMesh);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+// scene.add(ambientLight);
 
-const backSideGeometry = new THREE.BoxGeometry(1, 1, 1);
-const backSideMaterial = new THREE.MeshStandardMaterial({
-  color: 'red',
-  side: THREE.BackSide,
-});
-const backSideMesh = new THREE.Mesh(backSideGeometry, backSideMaterial);
-backSideMesh.position.set(2, 0.51, 4);
-// backSideMesh.castShadow = true;
-backSideMesh.receiveShadow = true;
-scene.add(backSideMesh);
-
-const doubleSideGeometry = new THREE.BoxGeometry(1, 1, 1);
-const doubleSideMaterial = new THREE.MeshStandardMaterial({
-  color: 'blue',
-  side: THREE.DoubleSide,
-});
-const doubleSideMesh = new THREE.Mesh(doubleSideGeometry, doubleSideMaterial);
-doubleSideMesh.position.set(-2, 0.51, 4);
-// doubleSideMesh.castShadow = true;
-doubleSideMesh.receiveShadow = true;
-scene.add(doubleSideMesh);
-
-const torusGeometry = new THREE.TorusKnotGeometry(0.5, 0.15, 100, 20);
-const torusMaterial = new THREE.MeshStandardMaterial({ color: 'purple' });
-torusMaterial.roughness = 0.5;
-torusMaterial.metalness = 1;
-const torusMesh = new THREE.Mesh(torusGeometry, torusMaterial);
-
-torusMesh.position.set(-4, 1, 0);
-torusMesh.castShadow = true;
-torusMesh.receiveShadow = true;
-scene.add(torusMesh);
-
-const torusKnotLambertMaterial = new THREE.MeshLambertMaterial({
-  color: 'purple',
-});
-torusKnotLambertMaterial.emissive = new THREE.Color('0x0000ff');
-torusKnotLambertMaterial.emissiveIntensity = 0.2;
-const torusKnotLambertMesh = new THREE.Mesh(
-  torusGeometry,
-  torusKnotLambertMaterial
+const directionLight = new THREE.DirectionalLight(0xffffff, 0.5);
+directionLight.position.set(3, 3, 0);
+directionLight.castShadow = true;
+directionLight.lookAt(0, 0, 0);
+// scene.add(directionLight);
+const directionalLightHelper = new THREE.DirectionalLightHelper(
+  directionLight,
+  1
 );
-torusKnotLambertMesh.position.set(-2, 1, 0);
-torusKnotLambertMesh.castShadow = true;
-torusKnotLambertMesh.receiveShadow = true;
-scene.add(torusKnotLambertMesh);
+// scene.add(directionalLightHelper);
 
-const torusKnotPhongMaterial = new THREE.MeshPhongMaterial({
-  color: 'purple',
-});
-torusKnotPhongMaterial.emissive = new THREE.Color('0x0000ff');
-torusKnotPhongMaterial.emissiveIntensity = 0.2;
-torusKnotPhongMaterial.specular = new THREE.Color('0x00ff00');
-torusKnotPhongMaterial.shininess = 100;
-const torusKnotPhongMesh = new THREE.Mesh(
-  torusGeometry,
-  torusKnotPhongMaterial
+const hemisphereLight = new THREE.HemisphereLight(0xb4a912, 0x12f34f, 5);
+hemisphereLight.position.set(0, 1, 0);
+hemisphereLight.lookAt(0, 0, 0);
+// scene.add(hemisphereLight);
+const hemisphereLightHelper = new THREE.HemisphereLightHelper(
+  hemisphereLight,
+  1
 );
-torusKnotPhongMesh.position.set(0, 1, 0);
-torusKnotPhongMesh.castShadow = true;
-torusKnotPhongMesh.receiveShadow = true;
-scene.add(torusKnotPhongMesh);
-const torushKnotBasicMaterial = new THREE.MeshBasicMaterial({
-  color: 'purple',
-});
-const torusKnotBasicMesh = new THREE.Mesh(
-  torusGeometry,
-  torushKnotBasicMaterial
-);
-torusKnotBasicMesh.position.set(2, 1, 0);
-torusKnotBasicMesh.castShadow = true;
-torusKnotBasicMesh.receiveShadow = true;
-scene.add(torusKnotBasicMesh);
-const torusKnotDepthMaterial = new THREE.MeshDepthMaterial({
-  color: 'purple',
-});
-const torusKnotDepthMesh = new THREE.Mesh(
-  torusGeometry,
-  torusKnotDepthMaterial
-);
-torusKnotDepthMesh.position.set(4, 1, 0);
-torusKnotDepthMesh.castShadow = true;
-torusKnotDepthMesh.receiveShadow = true;
-scene.add(torusKnotDepthMesh);
+// scene.add(hemisphereLightHelper);
 
-const textureLoader = new THREE.TextureLoader();
-// textureLoader.load('/threejs.webp', (texture) => {
-//   console.log(texture);
-//   const textureBoxGeometry = new THREE.BoxGeometry(1, 1, 1);
-//   const textureBoxMaterial = new THREE.MeshStandardMaterial({
-//     map: texture,
-//   });
-//   const textureBoxMesh = new THREE.Mesh(textureBoxGeometry, textureBoxMaterial);
-//   textureBoxMesh.position.set(-4, 1, 0);
-//   textureBoxMesh.castShadow = true;
-//   textureBoxMesh.receiveShadow = true;
-//   scene.add(textureBoxMesh);
-// });
+const pointLight = new THREE.PointLight(0xffffff, 5, 5, 4);
+pointLight.castShadow = true;
+pointLight.position.set(1, 1, 1);
+// scene.add(pointLight);
+const pointLightHelper = new THREE.PointLightHelper(pointLight, 1);
+// scene.add(pointLightHelper);
 
-const texture = await textureLoader.loadAsync('/threejs.webp');
-console.log(texture);
-const textureBoxGeometry = new THREE.BoxGeometry(1, 1, 1);
-const textureBoxMaterial = new THREE.MeshStandardMaterial({
-  map: texture,
-});
-const textureBoxMesh = new THREE.Mesh(textureBoxGeometry, textureBoxMaterial);
-textureBoxMesh.position.set(-4, 1, 0);
-textureBoxMesh.castShadow = true;
-textureBoxMesh.receiveShadow = true;
-scene.add(textureBoxMesh);
+const rectAreaLight = new THREE.RectAreaLight(0xffffff, 5, 2, 2);
+rectAreaLight.position.set(0, 1, 2);
+// scene.add(rectAreaLight);
+
+const targetObj = new THREE.Object3D();
+targetObj.position.set(1, 0, 2);
+scene.add(targetObj);
+
+const spotLight = new THREE.SpotLight(0xffffff, 10, 100, Math.PI / 4, 1, 1);
+spotLight.castShadow = true;
+spotLight.position.set(0, 3, 0);
+spotLight.target = targetObj;
+// spotLight.target.position.set(1, 0, 2);
+scene.add(spotLight);
+
+const spoptLightHelper = new THREE.SpotLightHelper(spotLight);
+scene.add(spoptLightHelper);
 
 const renderer = new THREE.WebGLRenderer({
   antialias: true, //박스 끝부분의 우글우글 현상을 완화해준다.
@@ -182,7 +118,7 @@ window.addEventListener('resize', () => {
 const render = () => {
   renderer.render(scene, camera);
   requestAnimationFrame(render);
-  textureBoxMesh.rotation.y += 0.01;
+  // textureBoxMesh.rotation.y += 0.01;
 };
 render();
 
