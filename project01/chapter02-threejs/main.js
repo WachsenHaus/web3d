@@ -13,14 +13,6 @@ const camera = new THREE.PerspectiveCamera(
   100
 );
 
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-// 메쉬스탠다드는 빛의 영향을 받는다.
-const material = new THREE.MeshStandardMaterial({ color: 'red' });
-const mesh = new THREE.Mesh(geometry, material);
-mesh.castShadow = true;
-mesh.position.y = 0.5;
-scene.add(mesh);
-
 const floorGeometry = new THREE.PlaneGeometry(20, 20);
 const floorMaterial = new THREE.MeshStandardMaterial({ color: 'gray' });
 const floorMesh = new THREE.Mesh(floorGeometry, floorMaterial);
@@ -37,12 +29,137 @@ directionalLight.lookAt(0, 0, 0);
 
 // 카메라
 camera.position.z = 5;
-camera.position.y = 1;
+camera.position.y = 5;
+camera.position.x = 5;
 
 // camera.position.y = 5;
 
 scene.add(floorMesh);
 scene.add(directionalLight);
+
+const frontSideGeometry = new THREE.BoxGeometry(1, 1, 1);
+const frontSideMaterial = new THREE.MeshStandardMaterial({
+  color: 'green',
+  side: THREE.FrontSide,
+});
+
+const frontSideMesh = new THREE.Mesh(frontSideGeometry, frontSideMaterial);
+frontSideMesh.position.z = 4;
+frontSideMesh.position.y = 0.5;
+frontSideMesh.castShadow = true;
+frontSideMesh.receiveShadow = true;
+scene.add(frontSideMesh);
+
+const backSideGeometry = new THREE.BoxGeometry(1, 1, 1);
+const backSideMaterial = new THREE.MeshStandardMaterial({
+  color: 'red',
+  side: THREE.BackSide,
+});
+const backSideMesh = new THREE.Mesh(backSideGeometry, backSideMaterial);
+backSideMesh.position.set(2, 0.51, 4);
+// backSideMesh.castShadow = true;
+backSideMesh.receiveShadow = true;
+scene.add(backSideMesh);
+
+const doubleSideGeometry = new THREE.BoxGeometry(1, 1, 1);
+const doubleSideMaterial = new THREE.MeshStandardMaterial({
+  color: 'blue',
+  side: THREE.DoubleSide,
+});
+const doubleSideMesh = new THREE.Mesh(doubleSideGeometry, doubleSideMaterial);
+doubleSideMesh.position.set(-2, 0.51, 4);
+// doubleSideMesh.castShadow = true;
+doubleSideMesh.receiveShadow = true;
+scene.add(doubleSideMesh);
+
+const torusGeometry = new THREE.TorusKnotGeometry(0.5, 0.15, 100, 20);
+const torusMaterial = new THREE.MeshStandardMaterial({ color: 'purple' });
+torusMaterial.roughness = 0.5;
+torusMaterial.metalness = 1;
+const torusMesh = new THREE.Mesh(torusGeometry, torusMaterial);
+
+torusMesh.position.set(-4, 1, 0);
+torusMesh.castShadow = true;
+torusMesh.receiveShadow = true;
+scene.add(torusMesh);
+
+const torusKnotLambertMaterial = new THREE.MeshLambertMaterial({
+  color: 'purple',
+});
+torusKnotLambertMaterial.emissive = new THREE.Color('0x0000ff');
+torusKnotLambertMaterial.emissiveIntensity = 0.2;
+const torusKnotLambertMesh = new THREE.Mesh(
+  torusGeometry,
+  torusKnotLambertMaterial
+);
+torusKnotLambertMesh.position.set(-2, 1, 0);
+torusKnotLambertMesh.castShadow = true;
+torusKnotLambertMesh.receiveShadow = true;
+scene.add(torusKnotLambertMesh);
+
+const torusKnotPhongMaterial = new THREE.MeshPhongMaterial({
+  color: 'purple',
+});
+torusKnotPhongMaterial.emissive = new THREE.Color('0x0000ff');
+torusKnotPhongMaterial.emissiveIntensity = 0.2;
+torusKnotPhongMaterial.specular = new THREE.Color('0x00ff00');
+torusKnotPhongMaterial.shininess = 100;
+const torusKnotPhongMesh = new THREE.Mesh(
+  torusGeometry,
+  torusKnotPhongMaterial
+);
+torusKnotPhongMesh.position.set(0, 1, 0);
+torusKnotPhongMesh.castShadow = true;
+torusKnotPhongMesh.receiveShadow = true;
+scene.add(torusKnotPhongMesh);
+const torushKnotBasicMaterial = new THREE.MeshBasicMaterial({
+  color: 'purple',
+});
+const torusKnotBasicMesh = new THREE.Mesh(
+  torusGeometry,
+  torushKnotBasicMaterial
+);
+torusKnotBasicMesh.position.set(2, 1, 0);
+torusKnotBasicMesh.castShadow = true;
+torusKnotBasicMesh.receiveShadow = true;
+scene.add(torusKnotBasicMesh);
+const torusKnotDepthMaterial = new THREE.MeshDepthMaterial({
+  color: 'purple',
+});
+const torusKnotDepthMesh = new THREE.Mesh(
+  torusGeometry,
+  torusKnotDepthMaterial
+);
+torusKnotDepthMesh.position.set(4, 1, 0);
+torusKnotDepthMesh.castShadow = true;
+torusKnotDepthMesh.receiveShadow = true;
+scene.add(torusKnotDepthMesh);
+
+const textureLoader = new THREE.TextureLoader();
+// textureLoader.load('/threejs.webp', (texture) => {
+//   console.log(texture);
+//   const textureBoxGeometry = new THREE.BoxGeometry(1, 1, 1);
+//   const textureBoxMaterial = new THREE.MeshStandardMaterial({
+//     map: texture,
+//   });
+//   const textureBoxMesh = new THREE.Mesh(textureBoxGeometry, textureBoxMaterial);
+//   textureBoxMesh.position.set(-4, 1, 0);
+//   textureBoxMesh.castShadow = true;
+//   textureBoxMesh.receiveShadow = true;
+//   scene.add(textureBoxMesh);
+// });
+
+const texture = await textureLoader.loadAsync('/threejs.webp');
+console.log(texture);
+const textureBoxGeometry = new THREE.BoxGeometry(1, 1, 1);
+const textureBoxMaterial = new THREE.MeshStandardMaterial({
+  map: texture,
+});
+const textureBoxMesh = new THREE.Mesh(textureBoxGeometry, textureBoxMaterial);
+textureBoxMesh.position.set(-4, 1, 0);
+textureBoxMesh.castShadow = true;
+textureBoxMesh.receiveShadow = true;
+scene.add(textureBoxMesh);
 
 const renderer = new THREE.WebGLRenderer({
   antialias: true, //박스 끝부분의 우글우글 현상을 완화해준다.
@@ -50,100 +167,6 @@ const renderer = new THREE.WebGLRenderer({
 renderer.shadowMap.enabled = true;
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
-
-const capsuleGeometry = new THREE.CapsuleGeometry(1, 2, 20, 30);
-const capsuleMaterial = new THREE.MeshStandardMaterial({ color: 'yellow' });
-const capsuleMesh = new THREE.Mesh(capsuleGeometry, capsuleMaterial);
-capsuleMesh.position.set(3, 1.75, 0);
-capsuleMesh.castShadow = true;
-capsuleMesh.receiveShadow = true;
-scene.add(capsuleMesh);
-
-const cylinderGeometry = new THREE.CylinderGeometry(1, 1, 2);
-const cylinderMaterial = new THREE.MeshStandardMaterial({ color: 'green' });
-const cylinderMesh = new THREE.Mesh(cylinderGeometry, cylinderMaterial);
-cylinderMesh.position.set(-3, 1, 0);
-cylinderMesh.castShadow = true;
-cylinderMesh.receiveShadow = true;
-scene.add(cylinderMesh);
-
-const torusGeometry = new THREE.TorusGeometry(0.5, 0.1, 16, 100, Math.PI / 2);
-const torusMaterial = new THREE.MeshStandardMaterial({ color: 'purple' });
-const torusMesh = new THREE.Mesh(torusGeometry, torusMaterial);
-torusMesh.position.set(0, 1, 3);
-torusMesh.castShadow = true;
-torusMesh.receiveShadow = true;
-scene.add(torusMesh);
-
-const starShpae = new THREE.Shape();
-starShpae.moveTo(0, 1);
-starShpae.lineTo(0.2, 0.2);
-starShpae.lineTo(1, 0.2);
-starShpae.lineTo(0.4, -0.1);
-starShpae.lineTo(0.6, -1);
-starShpae.lineTo(0, -0.5);
-starShpae.lineTo(-0.6, -1);
-starShpae.lineTo(-0.4, -0.1);
-starShpae.lineTo(-1, 0.2);
-starShpae.lineTo(-0.2, 0.2);
-starShpae.lineTo(0, 1);
-
-const shapeGeometry = new THREE.ShapeGeometry(starShpae);
-const shapeMaterial = new THREE.MeshStandardMaterial({ color: 'blue' });
-const shapeMesh = new THREE.Mesh(shapeGeometry, shapeMaterial);
-shapeMesh.position.set(0, 1, 2);
-shapeMesh.castShadow = true;
-shapeMesh.receiveShadow = true;
-scene.add(shapeMesh);
-
-const extrudeSettings = {
-  steps: 1,
-  depth: 0.1,
-  bevelEnabled: true,
-  bevelThickness: 0.1,
-  bevelSize: 0.3,
-  bevelOffset: 0,
-  bevelSegments: 100,
-};
-
-const extrudeGeometry = new THREE.ExtrudeGeometry(starShpae, extrudeSettings);
-const extrudeMaterial = new THREE.MeshStandardMaterial({ color: 'pink' });
-const extrudeMesh = new THREE.Mesh(extrudeGeometry, extrudeMaterial);
-extrudeMesh.position.set(2, 1.3, 2);
-extrudeMesh.castShadow = true;
-extrudeMesh.receiveShadow = true;
-scene.add(extrudeMesh);
-
-const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
-const sphereMaterial = new THREE.MeshStandardMaterial({ color: 'orange' });
-const sphereMesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
-sphereMesh.position.set(0, 1, -3);
-sphereMesh.castShadow = true;
-sphereMesh.receiveShadow = true;
-scene.add(sphereMesh);
-
-const numPoints = 1000;
-const positions = new Float32Array(numPoints * 3);
-
-for (let i = 0; i < numPoints; i++) {
-  const x = (Math.random() - 0.5) * 1;
-  const y = (Math.random() - 0.5) * 1;
-  const z = (Math.random() - 0.5) * 1;
-
-  positions[i * 3] = x;
-  positions[i * 3 + 1] = y;
-  positions[i * 3 + 2] = z;
-}
-
-const bufferGeometry = new THREE.BufferGeometry();
-bufferGeometry.setAttribute(
-  'position',
-  new THREE.BufferAttribute(positions, 3)
-);
-const bufferMaterial = new THREE.PointsMaterial({ color: 'red', size: 0.05 });
-const point = new THREE.Points(sphereGeometry, bufferMaterial);
-point.position.set(0, 0, -5);
-scene.add(point);
 
 const orbitControls = new OrbitControls(camera, renderer.domElement);
 orbitControls.update();
@@ -159,6 +182,7 @@ window.addEventListener('resize', () => {
 const render = () => {
   renderer.render(scene, camera);
   requestAnimationFrame(render);
+  textureBoxMesh.rotation.y += 0.01;
 };
 render();
 
