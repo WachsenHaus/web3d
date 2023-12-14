@@ -2,8 +2,15 @@ import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
-const scene = new THREE.Scene();
+const renderer = new THREE.WebGLRenderer({
+  antialias: true, //박스 끝부분의 우글우글 현상을 완화해준다.
+});
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
+const scene = new THREE.Scene();
 // 카메라가 필요한 파라미터들은 ?
 // asepec는 카메라의 비율을 말한다.
 const camera = new THREE.PerspectiveCamera(
@@ -24,11 +31,23 @@ floorMesh.castShadow = true;
 floorMesh.rotation.x = -Math.PI / 2;
 
 // 조명 (태양빛을 생각하자.)
-const directionalLight = new THREE.DirectionalLight(0xffffff, 5);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
 directionalLight.castShadow = true;
 directionalLight.position.set(3, 4, 5);
-// directionalLight.position.set(3, 4, -5);
 directionalLight.lookAt(0, 0, 0);
+directionalLight.shadow.mapSize.width = 4096;
+directionalLight.shadow.mapSize.height = 4096;
+directionalLight.shadow.camera.top = 2;
+directionalLight.shadow.camera.bottom = -2;
+directionalLight.shadow.camera.left = -2;
+directionalLight.shadow.camera.right = 2;
+directionalLight.shadow.camera.near = 0.1;
+directionalLight.shadow.camera.far = 100;
+
+const directionalLightCameraHelper = new THREE.DirectionalLightHelper(
+  directionalLight
+);
+scene.add(directionalLightCameraHelper);
 
 // 카메라
 camera.position.z = 5;
@@ -38,75 +57,20 @@ camera.position.x = 5;
 // camera.position.y = 5;
 
 scene.add(floorMesh);
-// scene.add(directionalLight);
+scene.add(directionalLight);
 
-const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
-const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
-const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+const boxgeometry = new THREE.BoxGeometry(1, 1, 1);
+const boxMaterial = new THREE.MeshStandardMaterial({
+  color: 0xffff12,
+});
+const boxMesh = new THREE.Mesh(boxgeometry, boxMaterial);
+boxMesh.position.set(0, 0.5, 0);
 boxMesh.castShadow = true;
 boxMesh.receiveShadow = true;
-boxMesh.position.y = 0.5;
 scene.add(boxMesh);
-
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-// scene.add(ambientLight);
-
-const directionLight = new THREE.DirectionalLight(0xffffff, 0.5);
-directionLight.position.set(3, 3, 0);
-directionLight.castShadow = true;
-directionLight.lookAt(0, 0, 0);
-// scene.add(directionLight);
-const directionalLightHelper = new THREE.DirectionalLightHelper(
-  directionLight,
-  1
-);
-// scene.add(directionalLightHelper);
-
-const hemisphereLight = new THREE.HemisphereLight(0xb4a912, 0x12f34f, 5);
-hemisphereLight.position.set(0, 1, 0);
-hemisphereLight.lookAt(0, 0, 0);
-// scene.add(hemisphereLight);
-const hemisphereLightHelper = new THREE.HemisphereLightHelper(
-  hemisphereLight,
-  1
-);
-// scene.add(hemisphereLightHelper);
-
-const pointLight = new THREE.PointLight(0xffffff, 5, 5, 4);
-pointLight.castShadow = true;
-pointLight.position.set(1, 1, 1);
-// scene.add(pointLight);
-const pointLightHelper = new THREE.PointLightHelper(pointLight, 1);
-// scene.add(pointLightHelper);
-
-const rectAreaLight = new THREE.RectAreaLight(0xffffff, 5, 2, 2);
-rectAreaLight.position.set(0, 1, 2);
-// scene.add(rectAreaLight);
-
-const targetObj = new THREE.Object3D();
-targetObj.position.set(1, 0, 2);
-scene.add(targetObj);
-
-const spotLight = new THREE.SpotLight(0xffffff, 10, 100, Math.PI / 4, 1, 1);
-spotLight.castShadow = true;
-spotLight.position.set(0, 3, 0);
-spotLight.target = targetObj;
-// spotLight.target.position.set(1, 0, 2);
-scene.add(spotLight);
-
-const spoptLightHelper = new THREE.SpotLightHelper(spotLight);
-scene.add(spoptLightHelper);
-
-const renderer = new THREE.WebGLRenderer({
-  antialias: true, //박스 끝부분의 우글우글 현상을 완화해준다.
-});
-renderer.shadowMap.enabled = true;
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
 
 const orbitControls = new OrbitControls(camera, renderer.domElement);
 orbitControls.update();
-
 window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
   camera.aspect = window.innerWidth / window.innerHeight;
