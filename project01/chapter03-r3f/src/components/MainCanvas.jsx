@@ -1,10 +1,10 @@
 /* eslint-disable react/no-unknown-property */
 import { Canvas } from '@react-three/fiber';
 import * as THREE from 'three';
+import { Physics } from '@react-three/cannon';
 import Meshes from './Meshes';
 import Lights from './Lights';
 import Controls from './Controls';
-import GLBModel from './GLBModel';
 
 const MainCanvas = () => {
   return (
@@ -28,10 +28,21 @@ const MainCanvas = () => {
         background: new THREE.Color(0x000000),
       }}
     >
+      {/* defaultContact는 기본적인 탄성과 마찰력이다. */}
+      <Physics
+      // gravity={[0, -9, 0]}
+      // defaultContactMaterial={{
+      //   restitution: 0.1,
+      //   friction: 1,
+      // }}
+      >
+        <Lights />
+        <Meshes />
+      </Physics>
       <Controls />
-      <Lights />
-      <Meshes />
-      <GLBModel />
+      {/* <GLBModel /> */}
+      {/* <Dancer /> */}
+      {/* <PostProcessor /> */}
     </Canvas>
   );
 };
