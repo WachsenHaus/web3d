@@ -1,6 +1,11 @@
 import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { FlyControls } from 'three/examples/jsm/controls/FlyControls';
+import { FirstPersonControls } from 'three/examples/jsm/controls/FirstPersonControls';
+import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
+import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
 const renderer = new THREE.WebGLRenderer({
   antialias: true, //박스 끝부분의 우글우글 현상을 완화해준다.
@@ -29,6 +34,7 @@ const floorMesh = new THREE.Mesh(floorGeometry, floorMaterial);
 floorMesh.receiveShadow = true;
 floorMesh.castShadow = true;
 floorMesh.rotation.x = -Math.PI / 2;
+floorMesh.name = 'floor'
 
 // 조명 (태양빛을 생각하자.)
 const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
@@ -44,11 +50,6 @@ directionalLight.shadow.camera.right = 2;
 directionalLight.shadow.camera.near = 0.1;
 directionalLight.shadow.camera.far = 100;
 
-const directionalLightCameraHelper = new THREE.DirectionalLightHelper(
-  directionalLight
-);
-scene.add(directionalLightCameraHelper);
-
 // 카메라
 camera.position.z = 5;
 camera.position.y = 5;
@@ -57,6 +58,7 @@ camera.position.x = 5;
 // camera.position.y = 5;
 
 scene.add(floorMesh);
+
 scene.add(directionalLight);
 
 const boxgeometry = new THREE.BoxGeometry(1, 1, 1);
@@ -67,10 +69,55 @@ const boxMesh = new THREE.Mesh(boxgeometry, boxMaterial);
 boxMesh.position.set(0, 0.5, 0);
 boxMesh.castShadow = true;
 boxMesh.receiveShadow = true;
-scene.add(boxMesh);
+// scene.add(boxMesh);
 
 const orbitControls = new OrbitControls(camera, renderer.domElement);
-orbitControls.update();
+orbitControls.enableDamping = true;
+orbitControls.dampingFactor = 0.03;
+// // 최대각도를 못내려가게 해준다.
+orbitControls.maxPolarAngle = Math.PI / 2; // 90도
+orbitControls.minpolo = Math.PI / 45; // 45도
+orbitControls.maxAzimuthAngle = Math.PI / 2; // 45도
+orbitControls.minAzimuthAngle = -Math.PI / 2; // 45도
+
+const rayCaster = new THREE.Raycaster();
+const newPosition = new THREE.Vector3(0,1,0);
+
+renderer.domElement.addEventListener("pointerdown",(e) => {
+  const x = (e.clientX / window.innerWidth) *2 -1
+  const y = -((e.clientY / window.innerHeight) * 2 - 1)
+  rayCaster.setFromCamera(new THREE.Vector2(x,y),camera);
+  const intersects = rayCaster.intersectObjects(scene.children);
+  const intersectFloor = intersects.find(i => i.object.name === 'floor');
+  newPosition.copy(intersectFloor.point);
+  newPosition.y = 1;
+  
+  console.log(intersectFloor);
+});
+
+
+
+const gltfLoader = new GLTFLoader();
+
+const gltf = await gltfLoader.loadAsync('/dancer.glb');
+console.log(gltf);
+const animationClips = gltf.animations;
+const character = gltf.scene;
+character.traverse((obj) => {
+  if (obj.isMesh) {
+    obj.castShadow = true;
+    obj.receiveShadow = true;
+  }
+});
+character.position.y = 0.8;
+character.scale.set(0.01, 0.01, 0.01);
+scene.add(gltf.scene);
+
+const mixer = new THREE.AnimationMixer(character);
+const action = mixer.clipAction(animationClips[3]);
+action.setLoop(THREE.LoopPingPong);
+action.play();
+
 window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -79,10 +126,25 @@ window.addEventListener('resize', () => {
   renderer.render(scene, camera);
 });
 
+const clock = new THREE.Clock();
+const targetVector = new THREE.Vector3();
+
 const render = () => {
+  character.lookAt(newPosition);
+  targetVector.subVectors(newPosition,character.position).normalize().multiplyScalar(0.01)
+
+  if(Math.abs(character.position.x - newPosition.x) >= 1 || Math.abs(character.position.z - newPosition.z) >= 1 ){
+    character.position.x += targetVector.x;
+    character.position.z += targetVector.z;
+    action.stop();
+  }
+  action.play();
   renderer.render(scene, camera);
   requestAnimationFrame(render);
-  // textureBoxMesh.rotation.y += 0.01;
+  orbitControls.update();
+  if (mixer) {
+    mixer.update(clock.getDelta());
+  }
 };
 render();
 
