@@ -35,7 +35,7 @@ const MainCanvas = () => {
           <Dancer />
         </Suspense>
       </ScrollControls>
-      <OrbitControls />
+      {/* <OrbitControls /> */}
     </Canvas>
   );
 };
