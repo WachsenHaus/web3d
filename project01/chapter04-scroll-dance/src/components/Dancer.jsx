@@ -25,6 +25,13 @@ const Dancer = () => {
   const isEntered = useRecoilValue(IsEnnteredAtom);
   const three = useThree();
   const dancerRef = useRef(null);
+  const boxRef = useRef(null);
+  const starGroupRef01 = useRef(null);
+  const starGroupRef02 = useRef(null);
+  const starGroupRef03 = useRef(null);
+  const rectAreaLightRef = useRef(null);
+  const hemisphereLightRef = useRef(null);
+
   const { scene, animations } = useGLTF('/models/dancer.glb');
   const { actions } = useAnimations(animations, dancerRef);
   const scroll = useScroll();
@@ -143,7 +150,11 @@ const Dancer = () => {
       <>
         <primitive ref={dancerRef} object={scene} scale={0.05} />
         <ambientLight intensity={2} />
-        <rectAreaLight position={[0, 10, 0]} intensity={30} />
+        <rectAreaLight
+          ref={rectAreaLightRef}
+          position={[0, 10, 0]}
+          intensity={30}
+        />
         <pointLight
           position={[0, 5, 0]}
           intensity={45}
@@ -151,12 +162,13 @@ const Dancer = () => {
           receiveShadow
         />
         <hemisphereLight
+          ref={hemisphereLightRef}
           position={[0, 5, 0]}
           intensity={0}
           groundColor={'lime'}
           color={'blue'}
         />
-        <Box position={[0, 0, 0]} args={[100, 100, 100]}>
+        <Box ref={boxRef} position={[0, 0, 0]} args={[100, 100, 100]}>
           <meshStandardMaterial color={'#DC4F00'} side={THREE.DoubleSide} />
         </Box>
         <Circle
@@ -172,6 +184,7 @@ const Dancer = () => {
           {/* sizeattenuation은 원금감에 따라 사이즈를 조절하고싶을때 */}
           {/* depthWrite 앞에있는게 뒤에별을 가리고 싶을때 */}
           <pointsMaterial
+            ref={starGroupRef01}
             size={0.5}
             color={new THREE.Color('#dc4f00')}
             sizeAttenuation
@@ -190,6 +203,7 @@ const Dancer = () => {
           {/* sizeattenuation은 원금감에 따라 사이즈를 조절하고싶을때 */}
           {/* depthWrite 앞에있는게 뒤에별을 가리고 싶을때 */}
           <pointsMaterial
+            ref={starGroupRef02}
             size={0.5}
             color={new THREE.Color('#dc4f00')}
             sizeAttenuation
@@ -203,6 +217,7 @@ const Dancer = () => {
           {/* sizeattenuation은 원금감에 따라 사이즈를 조절하고싶을때 */}
           {/* depthWrite 앞에있는게 뒤에별을 가리고 싶을때 */}
           <pointsMaterial
+            ref={starGroupRef03}
             size={0.5}
             color={new THREE.Color('#dc4f00')}
             sizeAttenuation
