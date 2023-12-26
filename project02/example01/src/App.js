@@ -1,7 +1,7 @@
+import { Home } from './pages';
+
 function App() {
-  return (
-    <div className="h1">Hello R3F</div>
-  );
+  return <Home />;
 }
 
 export default App;
