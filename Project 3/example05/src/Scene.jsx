@@ -6,12 +6,32 @@ import Car from './Car';
 import { useRecoilValue } from 'recoil';
 import { useEffect } from 'react';
 import { isStartScene } from './utils/atom';
+import DrawCall from './components/DrawCall';
+// import fontjson from './Pretendard.json';
 
 function Scene() {
   const isStart = useRecoilValue(isStartScene);
-  useEffect(() => {
-    console.log(isStart);
-  }, [isStart]);
+  // useEffect(() => {
+  //   const fontData = fontjson;
+  //   console.log(fontData);
+  //   const targetText = 'How to Play↑←↓→';
+  //   const modifiedGlyphs = {};
+
+  //   // target에 해당하는 글리프만 가져온다.
+  //   for (let i = 0; i < targetText.length; i++) {
+  //     const char = targetText[i];
+  //     const charKey = char in fontData.glyphs ? char : char.toUpperCase();
+  //     if (charKey in fontData.glyphs) {
+  //       modifiedGlyphs[char] = fontData.glyphs[charKey];
+  //     }
+  //   }
+
+  //   const modifiedFontData = {
+  //     ...fontData,
+  //     glyphs: modifiedGlyphs,
+  //   };
+  //   console.log(modifiedFontData);
+  // }, []);
   return (
     <>
       <Canvas camera={{ fov: 45, position: [1.5, 2, 4] }}>
@@ -23,6 +43,7 @@ function Scene() {
             <Ground />
           </Debug>
         </Physics>
+        <DrawCall />
         <StatsGl showPanel={0} className="work" />
       </Canvas>
     </>
