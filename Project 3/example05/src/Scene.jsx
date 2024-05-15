@@ -1,7 +1,7 @@
 import { Canvas } from '@react-three/fiber';
 import { Ground } from './Ground';
 import { Physics, Debug } from '@react-three/cannon';
-import { Stats, StatsGl } from '@react-three/drei';
+import { OrbitControls, Stats, StatsGl } from '@react-three/drei';
 import Car from './Car';
 import { useRecoilValue } from 'recoil';
 import { useEffect } from 'react';
@@ -44,6 +44,7 @@ function Scene() {
           </Debug>
         </Physics>
         <DrawCall />
+        <OrbitControls />
         <StatsGl showPanel={0} className="work" />
       </Canvas>
     </>
