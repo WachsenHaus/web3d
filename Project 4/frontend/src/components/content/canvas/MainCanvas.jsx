@@ -2,7 +2,7 @@
 import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Box, OrbitControls } from '@react-three/drei';
-import Player from './maps/player';
+
 import RootMap from './maps/RootMap';
 
 const MainCanvas = () => {
@@ -37,7 +37,7 @@ const MainCanvas = () => {
         shadow-camera-far={200}
       />
       <OrbitControls />
-      <Player />
+
       <RootMap />
     </Canvas>
   );

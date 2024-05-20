@@ -10,7 +10,7 @@ io.listen(4000);
 
 const players = [];
 
-io.on('connection', (socket) => {
+io.on('connect', (socket) => {
   console.log('연결됨');
   io.emit('players', players);
 
@@ -20,9 +20,9 @@ io.on('connection', (socket) => {
       const newPlayer = {
         id: socket.id,
         position: [0, 0, 0],
-        tempNickName,
-        tempJobPosition,
-        selectedCharacter,
+        nickname: tempNickName,
+        jobPosition: tempJobPosition,
+        selectedCharacterGlbNameIndex,
         myRoom: {
           objects: [],
         },
@@ -84,8 +84,7 @@ io.on('connection', (socket) => {
       io.emit('exit', {
         id: socket.id,
         nickName: player.nickName,
-        jobPosition: player,
-        jobPosition,
+        jobPosition: player.jobPosition,
       });
     }
   });
