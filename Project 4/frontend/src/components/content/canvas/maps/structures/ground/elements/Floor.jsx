@@ -2,6 +2,7 @@
 import { useLoader } from '@react-three/fiber';
 import React from 'react';
 import { RepeatWrapping, TextureLoader } from 'three';
+import { socket } from '../../../../../../../sockets/clientSocket';
 import { groundMapSize } from '../../../../../../../data/constants';
 
 const Floor = () => {
@@ -18,6 +19,10 @@ const Floor = () => {
       receiveShadow
       rotation-x={-Math.PI / 2}
       position-y={-0.001}
+      onPointerUp={(e) => {
+        console.log(e.point.x, 0, e.point.z);
+        socket.emit('move', [e.point.x, 0, e.point.z]);
+      }}
     >
       <planeGeometry args={[groundMapSize, groundMapSize]} />
       <meshStandardMaterial map={sandTexture} />

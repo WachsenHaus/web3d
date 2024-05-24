@@ -14,3 +14,8 @@ export const SelectedCharacterGlbNameIndexAtom = atom({
   key: 'SelectedCharacterGlbNameIndexAtom',
   default: 0,
 });
+
+export const PlayersAtom = atom({
+  key: 'PlayersAtom',
+  default: [],
+});
