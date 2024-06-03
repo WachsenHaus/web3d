@@ -1,6 +1,6 @@
-import React from "react";
-import { usePlayer } from "./hooks/usePlayer";
-import { Textboard } from "../structures/ground/3dUIs/Textboard";
+import React from 'react';
+import { usePlayer } from './hooks/usePlayer';
+import { Textboard } from '../structures/ground/3dUIs/Textboard';
 
 export function Player({ player, position, modelIndex: mIdx }) {
   const modelIndex = mIdx ?? player.selectedCharacterGlbNameIndex;
@@ -30,7 +30,7 @@ export function Player({ player, position, modelIndex: mIdx }) {
       <group
         ref={playerRef}
         position={memoizedPosition}
-        name={playerId ?? ""}
+        name={playerId ?? ''}
         onClick={(e) => {
           e.stopPropagation();
           if (me?.id !== playerId) {
@@ -52,11 +52,11 @@ export function Player({ player, position, modelIndex: mIdx }) {
               castShadow
               receiveShadow
               name="Character"
-              geometry={nodes.Character["geometry"]}
+              geometry={nodes.Character['geometry']}
               material={
-                modelIndex === 1 ? materials["Atlas.001"] : materials.Atlas
+                modelIndex === 1 ? materials['Atlas.001'] : materials.Atlas
               }
-              skeleton={nodes.Character["skeleton"]}
+              skeleton={nodes.Character['skeleton']}
               rotation={[-Math.PI / 2, 0, 0]}
               scale={100}
             />

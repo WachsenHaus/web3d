@@ -1,13 +1,15 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import { SkeletonUtils } from 'three-stdlib';
-import { useGraph } from '@react-three/fiber';
+import { useFrame, useGraph } from '@react-three/fiber';
 import { usePlayer } from './hooks/usePlayer';
 import { TextBoard } from '../structures/ground/3dUIs/TextBoard';
+import { Vector3 } from 'three';
 const path = './models/CubeGuyCharacter.glb';
 useGLTF.preload(path);
 
-export function Man({ player, position, modelIndex }) {
+export function Player({ player, position, modelIndex: mIdx }) {
+  const modelIndex = mIdx ?? player.selectedCharacterGlbNameIndex;
   const {
     me,
     playerRef,
@@ -18,10 +20,10 @@ export function Man({ player, position, modelIndex }) {
     materials,
   } = usePlayer({
     player,
-
     position,
-    modelIndex: modelIndex ?? player.selectedCharacterGlbNameIndex,
+    modelIndex,
   });
+
   return (
     <>
       {me && (
@@ -48,7 +50,9 @@ export function Man({ player, position, modelIndex }) {
             <skinnedMesh
               name="Character"
               geometry={nodes.Character.geometry}
-              material={materials.Atlas}
+              material={
+                modelIndex === 1 ? materials['Atlas.001'] : materials.Atlas
+              }
               skeleton={nodes.Character.skeleton}
               rotation={[-Math.PI / 2, 0, 0]}
               scale={100}

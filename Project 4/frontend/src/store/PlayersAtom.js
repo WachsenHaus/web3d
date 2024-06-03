@@ -15,6 +15,16 @@ export const SelectedCharacterGlbNameIndexAtom = atom({
   default: 0,
 });
 
+export const PlayerCompletedQuestsAtom = atom({
+  key: 'PlayerCompletedQuestsAtom',
+  default: [],
+});
+
+export const PlayerInventoryAtom = atom({
+  key: 'PlayerInventoryAtom',
+  default: [],
+});
+
 export const PlayersAtom = atom({
   key: 'PlayersAtom',
   default: [],

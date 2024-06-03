@@ -4,12 +4,15 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { SkeletonUtils } from 'three-stdlib';
 import { MeAtom } from '../../../../../../store/PlayersAtom';
+import { Vector3 } from 'three';
 
 export const usePlayer = ({ player, position, modelIndex }) => {
   const memoziedPosition = useMemo(() => position, []);
   const playerId = player?.id;
   const playerRef = useRef(null);
+  const nickNameRef = useRef(null);
   const me = useRecoilValue(MeAtom);
+
   const { scene, materials, animations } = useGLTF(
     (() => {
       switch (modelIndex) {
@@ -49,11 +52,29 @@ export const usePlayer = ({ player, position, modelIndex }) => {
         'CharacterArmature|CharacterArmature|CharacterArmature|Idle'
       );
     }
+
+    if (nickNameRef.current) {
+      nickNameRef.current.position.set(
+        playerRef.current.position.x,
+        playerRef.current.position.y + 3.5,
+        playerRef.current.position.z
+      );
+      nickNameRef.current.rotation.set(
+        camera.rotation.x,
+        camera.rotation.y,
+        camera.rotation.z
+      );
+      nickNameRef.current.lookAt(
+        camera.position.x,
+        camera.position.y,
+        camera.position.z
+      );
+    }
     if (me?.id === playerId) {
       camera.position.set(
-        playerRef.current.position.x + 12,
-        playerRef.current.position.y + 12,
-        playerRef.current.position.z + 12
+        playerRef.current.position.x + 24,
+        playerRef.current.position.y + 24,
+        playerRef.current.position.z + 24
       );
       camera.lookAt(playerRef.current.position);
     }
@@ -80,5 +101,13 @@ export const usePlayer = ({ player, position, modelIndex }) => {
     };
   }, [actions, animation]);
 
-  return { playerRef, memoziedPosition, playerId, nodes, materials };
+  return {
+    me,
+    nickNameRef,
+    playerRef,
+    memoziedPosition,
+    playerId,
+    nodes,
+    materials,
+  };
 };

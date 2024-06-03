@@ -11,6 +11,7 @@ import { Man } from './player/Man';
 import { Woman } from './player/Woman';
 import { Kid } from './player/Kid';
 import { Vector3 } from 'three';
+import { Player } from './player/Player';
 
 const RootMap = () => {
   const [characterSelectFinished] = useRecoilState(CharacterSelectFinishedAtom);
@@ -37,47 +38,17 @@ const RootMap = () => {
           <GroundElements />
           {players.map((player) => {
             return (
-              <>
-                {player.selectedCharacterGlbNameIndex === 0 && (
-                  <Man
-                    player={player}
-                    modelIndex={0}
-                    position={
-                      new Vector3(
-                        player.position[0],
-                        player.position[1],
-                        player.position[2]
-                      )
-                    }
-                  />
-                )}
-                {player.selectedCharacterGlbNameIndex === 1 && (
-                  <Woman
-                    modelIndex={1}
-                    player={player}
-                    position={
-                      new Vector3(
-                        player.position[0],
-                        player.position[1],
-                        player.position[2]
-                      )
-                    }
-                  />
-                )}
-                {player.selectedCharacterGlbNameIndex === 2 && (
-                  <Kid
-                    modelIndex={2}
-                    player={player}
-                    position={
-                      new Vector3(
-                        player.position[0],
-                        player.position[1],
-                        player.position[2]
-                      )
-                    }
-                  />
-                )}
-              </>
+              <Player
+                key={player.id}
+                player={player}
+                position={
+                  new Vector3(
+                    player.position[0],
+                    player.position[1],
+                    player.position[2]
+                  )
+                }
+              />
             );
           })}
         </>

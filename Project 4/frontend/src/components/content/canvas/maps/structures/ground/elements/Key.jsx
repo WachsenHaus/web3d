@@ -2,11 +2,23 @@ import { useGLTF } from '@react-three/drei';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Vector3 } from 'three';
 import gsap from 'gsap';
+import { useRecoilState } from 'recoil';
+import {
+  PlayerCompletedQuestsAtom,
+  PlayerInventoryAtom,
+} from '../../../../../../../store/PlayersAtom';
 
 const name = 'ground-key';
 
 const Key = () => {
   const ref = useRef(null);
+  const [playerInventory, setPlayerInventory] =
+    useRecoilState(PlayerInventoryAtom);
+
+  const [playerCompletedQuests, setPlayerCompletedQuests] = useRecoilState(
+    PlayerCompletedQuestsAtom
+  );
+
   const { scene } = useGLTF('/models/Key.glb');
   const position = useMemo(() => new Vector3(22, 1, -18), []);
 
@@ -25,6 +37,13 @@ const Key = () => {
       });
     }
   }, [position, scene]);
+
+  if (
+    playerCompletedQuests.includes('treasure') ||
+    playerInventory.includes('key')
+  ) {
+    return null;
+  }
   return (
     <>
       <rectAreaLight
@@ -33,6 +52,11 @@ const Key = () => {
         rotation-x={Math.PI / 2}
       />
       <primitive
+        onClick={(e) => {
+          e.stopPropagation();
+          alert('열쇠를얻음');
+          setPlayerInventory((prev) => uniq([...prev, 'key']));
+        }}
         visible
         name={name}
         scale={1}

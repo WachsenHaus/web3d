@@ -7,6 +7,7 @@ import { Man } from '../content/canvas/maps/player/Man';
 import { Vector3 } from 'three';
 import { Woman } from '../content/canvas/maps/player/Woman';
 import { Kid } from '../content/canvas/maps/player/Kid';
+import { Player } from '../content/canvas/maps/player/Player';
 
 const CharacterInit = () => {
   const camera = useThree((three) => three.camera);
@@ -26,27 +27,13 @@ const CharacterInit = () => {
 
   return (
     <>
-      {selectedCharacterGlbNameIndex === 0 && (
-        <Man
-          player={undefined}
-          position={new Vector3(0, 0, 0)}
-          modelIndex={0}
-        />
-      )}
-      {selectedCharacterGlbNameIndex === 1 && (
-        <Woman
-          player={undefined}
-          position={new Vector3(0, 0, 0)}
-          modelIndex={1}
-        />
-      )}
-      {selectedCharacterGlbNameIndex === 2 && (
-        <Kid
-          player={undefined}
-          position={new Vector3(0, 0, 0)}
-          modelIndex={2}
-        />
-      )}
+      <Player
+        key={selectedCharacterGlbNameIndex}
+        player={undefined}
+        position={new Vector3(0, 0, 0)}
+        modelIndex={selectedCharacterGlbNameIndex}
+      />
+
       <OrbitControls
         ref={controls}
         minDistance={1}
