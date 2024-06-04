@@ -2,11 +2,17 @@ import { useGLTF } from '@react-three/drei';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Vector3 } from 'three';
 import gsap from 'gsap';
+import { useRecoilState } from 'recoil';
+import { PlayerInventoryAtom } from '../../../../../../../store/PlayersAtom';
+import { uniq } from 'lodash';
 
 const name = 'ground-steak';
 
 const Steak = () => {
   const ref = useRef(null);
+  const [playerInventory, setPlayerInventory] =
+    useRecoilState(PlayerInventoryAtom);
+
   const { scene } = useGLTF('/models/Steak.glb');
   const position = useMemo(() => new Vector3(22, 1, -18), []);
 
@@ -39,6 +45,14 @@ const Steak = () => {
       /> */}
       <primitive
         visible
+        onClick={(e) => {
+          e.stopPropagation();
+          alert('스테이크를 얻음');
+          setPlayerInventory((prev) => uniq([...prev, 'food']));
+          if (ref.current) {
+            ref.current.visible = false;
+          }
+        }}
         name={name}
         scale={1}
         position={position}

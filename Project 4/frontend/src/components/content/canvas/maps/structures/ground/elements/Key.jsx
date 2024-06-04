@@ -2,6 +2,7 @@ import { useGLTF } from '@react-three/drei';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { Vector3 } from 'three';
 import gsap from 'gsap';
+import { uniq } from 'lodash';
 import { useRecoilState } from 'recoil';
 import {
   PlayerCompletedQuestsAtom,
@@ -38,6 +39,7 @@ const Key = () => {
     }
   }, [position, scene]);
 
+  // 유저가 보물이나 키를 가지고있다면 null을 반환.
   if (
     playerCompletedQuests.includes('treasure') ||
     playerInventory.includes('key')
