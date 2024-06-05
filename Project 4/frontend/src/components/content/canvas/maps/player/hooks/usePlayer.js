@@ -5,6 +5,7 @@ import { useRecoilValue } from 'recoil';
 import { SkeletonUtils } from 'three-stdlib';
 import { MeAtom } from '../../../../../../store/PlayersAtom';
 import { Vector3 } from 'three';
+import { PlayerGroundStructuresFloorPlaneCornersSelector } from '../../../../../../../../result/src/store/PlayersAtom';
 
 export const usePlayer = ({ player, position, modelIndex }) => {
   const memoziedPosition = useMemo(() => position, []);
@@ -12,6 +13,9 @@ export const usePlayer = ({ player, position, modelIndex }) => {
   const playerRef = useRef(null);
   const nickNameRef = useRef(null);
   const me = useRecoilValue(MeAtom);
+  const playerGroundStructuresFloorPlaneCorenrs = useRecoilValue(
+    PlayerGroundStructuresFloorPlaneCornersSelector
+  );
 
   const { scene, materials, animations } = useGLTF(
     (() => {
@@ -77,6 +81,25 @@ export const usePlayer = ({ player, position, modelIndex }) => {
         playerRef.current.position.z + 24
       );
       camera.lookAt(playerRef.current.position);
+
+      // 영역 안에 존재하면 카메라 뷰를 변경함.
+      const currentCloseStructure =
+        playerGroundStructuresFloorPlaneCorenrs.find((structure) => {
+          return (
+            playerRef.current.position.x < structure.corners[0].x &&
+            playerRef.current.position.x > structure.corners[2].x &&
+            playerRef.current.position.z < structure.corners[0].z &&
+            playerRef.current.position.z > structure.corners[2].z
+          );
+        });
+      if (currentCloseStructure) {
+        camera.lookAt(currentCloseStructure.position);
+        camera.position.set(
+          playerRef.current.position.x + 6,
+          playerRef.current.position.y + 6,
+          playerRef.current.position.z + 6
+        );
+      }
     }
   });
 

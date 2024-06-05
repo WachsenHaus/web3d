@@ -10,6 +10,7 @@ import Zombie from './elements/npc/Zombie';
 import Key from './elements/Key';
 import Steak from './elements/Steak';
 import WoodChest from './elements/WoodChest';
+import { Cloud, Clouds } from '@react-three/drei';
 
 const GroundElements = () => {
   return (
@@ -31,6 +32,29 @@ const GroundElements = () => {
       <PineTrees position={[-20, 0, -30]} />
       <PineTrees position={[-30, 0, -20]} />
       <PineTrees position={[-20, 0, -20]} />
+      <Clouds>
+        <Cloud
+          segments={100}
+          volume={5}
+          scale={2}
+          concentrate="random"
+          opacity={0.5}
+          speed={2}
+          position={[-20, 0, -20]}
+        ></Cloud>
+
+        <Cloud
+          segments={100}
+          volume={10}
+          scale={2}
+          fade={10}
+          concentrate="random"
+          opacity={0.5}
+          speed={2}
+          position={[20, 0, -20]}
+          color={'skyblue'}
+        ></Cloud>
+      </Clouds>
     </>
   );
 };
