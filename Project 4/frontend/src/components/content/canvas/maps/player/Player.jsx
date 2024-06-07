@@ -29,7 +29,7 @@ export function Player({ player, position, modelIndex: mIdx }) {
       {me && (
         <TextBoard
           ref={nickNameRef}
-          text={`${player?.nickname}${player?.jobPosition}`}
+          text={`${player?.nickName}[${player?.jobPosition}]`}
         />
       )}
       <group

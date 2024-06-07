@@ -20,7 +20,7 @@ io.on('connect', (socket) => {
       const newPlayer = {
         id: socket.id,
         position: [0, 0, 0],
-        nickname: tempNickName,
+        nickName: tempNickName,
         jobPosition: tempJobPosition,
         selectedCharacterGlbNameIndex,
         myRoom: {
@@ -56,12 +56,14 @@ io.on('connect', (socket) => {
 
   socket.on('newText', (text) => {
     const sender = players.find((player) => player.id === socket.id);
+    console.log(sender);
+    console.log(text);
     if (sender) {
       const { id, nickName, jobPosition } = sender;
       if (nickName && jobPosition) {
         io.emit('newText', {
           senderId: id,
-          senderNickName: nickName,
+          senderNickname: nickName,
           senderJobPosition: jobPosition,
           text,
           timestamp: new Date().getTime(),

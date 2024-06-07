@@ -22,7 +22,7 @@ export const useAnimatedText = (text, once, callback) => {
   useEffect(() => {
     setCurrentIndex(0);
     setDisplayText('');
-  }, []);
+  }, [text]);
 
   return { displayText };
 };

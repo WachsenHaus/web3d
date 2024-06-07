@@ -1,32 +1,31 @@
 import React, { Suspense, useEffect, useRef } from 'react';
 import GroundElements from './structures/ground';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import * as THREE from 'three';
 import {
   CharacterSelectFinishedAtom,
+  CurrentMapAtom,
   PlayerGroundStructuresFloorPlaneCornersSelector,
   PlayersAtom,
+  RecentChatsAtom,
 } from '../../../../store/PlayersAtom';
 import CharacterInit from '../../../lobby/CharacterInit';
 import { useThree } from '@react-three/fiber';
-import { Man } from './player/Man';
-import { Woman } from './player/Woman';
-import { Kid } from './player/Kid';
-import { Vector3 } from 'three';
 import { Player } from './player/Player';
 import { Line } from '@react-three/drei';
 import { Loader } from '../../loader/Loader';
+import { ChatBubble } from './structures/ground/3dUIs/ChatBubble';
 
 const RootMap = () => {
-  const [characterSelectFinished] = useRecoilState(CharacterSelectFinishedAtom);
+  const characeterSelectFinished = useRecoilValue(CharacterSelectFinishedAtom);
+  const [players] = useRecoilState(PlayersAtom);
+  const recentChats = useRecoilValue(RecentChatsAtom);
   const playGroundStructuresFloorPlaneCorners = useRecoilValue(
     PlayerGroundStructuresFloorPlaneCornersSelector
   );
-
-  const [players] = useRecoilState(PlayersAtom);
+  const currentMap = useRecoilValue(CurrentMapAtom);
   const camera = useThree((three) => three.camera);
   const controls = useRef(null);
-
-  const characeterSelectFinished = useRecoilValue(CharacterSelectFinishedAtom);
 
   useEffect(() => {
     if (!controls.current) {
@@ -54,17 +53,26 @@ const RootMap = () => {
           })}
           {players.map((player) => {
             return (
-              <Player
-                key={player.id}
-                player={player}
-                position={
-                  new Vector3(
-                    player.position[0],
-                    player.position[1],
-                    player.position[2]
-                  )
-                }
-              />
+              <React.Fragment key={player.id}>
+                <ChatBubble
+                  key={`${player.id}_chat`}
+                  player={player}
+                  chat={recentChats.find(
+                    (recentChat) => recentChat.senderId === player.id
+                  )}
+                />
+                <Player
+                  key={`${player.id}_character`}
+                  player={player}
+                  position={
+                    new THREE.Vector3(
+                      player.position[0],
+                      player.position[1],
+                      player.position[2]
+                    )
+                  }
+                />
+              </React.Fragment>
             );
           })}
         </>

@@ -1,14 +1,27 @@
 import { useRecoilValue } from 'recoil';
-import { isLoadCompletedAtom } from '../../../store/PlayersAtom';
+import {
+  CurrentMapAtom,
+  isLoadCompletedAtom,
+} from '../../../store/PlayersAtom';
 import styled from 'styled-components';
-import { SideBar } from '../canvas/UserInterfaces/common/SideBar';
+
+import { MiniMap } from './canvasUserInterfaces/ground/Minimap';
+import { SideBar } from './canvasUserInterfaces/common/SideBar';
+import { ChatArea } from './canvasUserInterfaces/common/ChatArea';
 
 export const CanvasLayout = ({ children }) => {
+  const currentMap = useRecoilValue(CurrentMapAtom);
   const isLoadCompleted = useRecoilValue(isLoadCompletedAtom);
   return (
     <Wrapper>
       {children}
-      {isLoadCompleted && <SideBar />}
+      {isLoadCompleted && (
+        <>
+          <SideBar />
+          <MiniMap />
+          {currentMap !== 'MINI_GAME' && <ChatArea />}
+        </>
+      )}
     </Wrapper>
   );
 };

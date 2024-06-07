@@ -18,7 +18,6 @@ export function Man({ player, position, modelIndex }) {
     materials,
   } = usePlayer({
     player,
-
     position,
     modelIndex: modelIndex ?? player.selectedCharacterGlbNameIndex,
   });
@@ -27,7 +26,7 @@ export function Man({ player, position, modelIndex }) {
       {me && (
         <TextBoard
           ref={nickNameRef}
-          text={`${player?.nickname}${player?.jobPosition}`}
+          text={`${player?.nickName}${player?.jobPosition}`}
         />
       )}
       <group

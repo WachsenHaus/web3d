@@ -1,21 +1,30 @@
 import { useAnimations, useGLTF } from '@react-three/drei';
-import { useFrame, useGraph } from '@react-three/fiber';
+import { useFrame, useGraph, useThree } from '@react-three/fiber';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { SkeletonUtils } from 'three-stdlib';
 import { MeAtom } from '../../../../../../store/PlayersAtom';
 import { Vector3 } from 'three';
 import { PlayerGroundStructuresFloorPlaneCornersSelector } from '../../../../../../../../result/src/store/PlayersAtom';
+import { calculateMinimapPosition } from '../../../../../../utils';
 
 export const usePlayer = ({ player, position, modelIndex }) => {
-  const memoziedPosition = useMemo(() => position, []);
   const playerId = player?.id;
-  const playerRef = useRef(null);
-  const nickNameRef = useRef(null);
   const me = useRecoilValue(MeAtom);
+
   const playerGroundStructuresFloorPlaneCorenrs = useRecoilValue(
     PlayerGroundStructuresFloorPlaneCornersSelector
   );
+
+  const memoziedPosition = useMemo(() => position, []);
+  const point = document.getElementById(`player-point-${playerId}`);
+  const { scene: threeScene } = useThree();
+  const chatBubbleBoard = threeScene.getObjectByName(
+    `chat-bubble-billboard-${playerId}`
+  );
+
+  const nickNameRef = useRef(null);
+  const playerRef = useRef(null);
 
   const { scene, materials, animations } = useGLTF(
     (() => {
@@ -48,7 +57,13 @@ export const usePlayer = ({ player, position, modelIndex }) => {
 
       playerRef.current.position.sub(direction);
       playerRef.current.lookAt(position);
-      console.log(playerRef.current);
+
+      if (point) {
+        point.style.transform = `translate(
+          ${calculateMinimapPosition(playerRef.current.position).x}px,
+          ${calculateMinimapPosition(playerRef.current.position).y}px
+          )`;
+      }
 
       setAnimation('CharacterArmature|CharacterArmature|CharacterArmature|Run');
     } else {
@@ -73,6 +88,14 @@ export const usePlayer = ({ player, position, modelIndex }) => {
         camera.position.y,
         camera.position.z
       );
+    }
+    if (chatBubbleBoard) {
+      chatBubbleBoard.position.set(
+        playerRef.current.position.x,
+        playerRef.current.position.y + 4,
+        playerRef.current.position.z
+      );
+      chatBubbleBoard.lookAt(10000, 10000, 10000);
     }
     if (me?.id === playerId) {
       camera.position.set(
