@@ -1,4 +1,5 @@
 export const groundMapSize = 50;
+export const myRoomSize = 10;
 
 export const STEPS = {
   NICK_NAME: 0,

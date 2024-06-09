@@ -8,6 +8,8 @@ import styled from 'styled-components';
 import { MiniMap } from './canvasUserInterfaces/ground/Minimap';
 import { SideBar } from './canvasUserInterfaces/common/SideBar';
 import { ChatArea } from './canvasUserInterfaces/common/ChatArea';
+import { Notice } from './canvasUserInterfaces/common/Notice';
+import { Footer } from './canvasUserInterfaces/common/Footer';
 
 export const CanvasLayout = ({ children }) => {
   const currentMap = useRecoilValue(CurrentMapAtom);
@@ -17,11 +19,13 @@ export const CanvasLayout = ({ children }) => {
       {children}
       {isLoadCompleted && (
         <>
+          <Notice />
           <SideBar />
           <MiniMap />
           {currentMap !== 'MINI_GAME' && <ChatArea />}
         </>
       )}
+      <Footer />
     </Wrapper>
   );
 };

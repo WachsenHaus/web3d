@@ -106,3 +106,15 @@ export const AlreadyDisplayedRecentChatsAtom = atom({
   key: 'AlreadyDisplayedRecentChatsAtom',
   default: [],
 });
+
+// 입장 공지 정보
+export const EnteredPlayerNoticeAtom = atom({
+  key: 'EnteredPlayerNoticeAtom',
+  default: undefined,
+});
+
+// 퇴장 공지 정보
+export const ExitedPlayerNoticeAtom = atom({
+  key: 'ExitedPlayerNoticeAtom',
+  default: undefined,
+});

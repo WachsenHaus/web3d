@@ -5,6 +5,8 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   AlreadyDisplayedRecentChatsAtom,
   ChatsAtom,
+  EnteredPlayerNoticeAtom,
+  ExitedPlayerNoticeAtom,
   MeAtom,
   PlayersAtom,
   RecentChatsAtom,
@@ -20,6 +22,9 @@ const ClientSocketControls = () => {
     AlreadyDisplayedRecentChatsAtom
   );
 
+  const setEnterNotice = useSetRecoilState(EnteredPlayerNoticeAtom);
+  const setExitNotice = useSetRecoilState(ExitedPlayerNoticeAtom);
+
   useEffect(() => {
     const handleConnect = () => {
       console.info('연결됨');
@@ -32,12 +37,17 @@ const ClientSocketControls = () => {
       setMe(value);
       console.info('초기화됨');
     };
-    const handleEnter = () => {
+
+    const handleEnter = (value) => {
       console.info('입장함');
+      setEnterNotice(value);
     };
-    const handleExit = () => {
+
+    const handleExit = (value) => {
       console.info('퇴장함');
+      setExitNotice(value);
     };
+
     const handlePlayers = (value) => {
       console.log('✨입장');
       setPlayers(value);
@@ -105,6 +115,8 @@ const ClientSocketControls = () => {
     setChats,
     setMe,
     setPlayers,
+    setEnterNotice,
+    setExitNotice,
   ]);
   return null;
 };
